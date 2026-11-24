@@ -1,6 +1,7 @@
 package pl.team.memora.controller;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,8 +21,8 @@ import pl.team.memora.service.JwtService;
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
-    private final AuthService authService;
+    private final JwtService            jwtService;
+    private final AuthService           authService;
 
     public AuthController(AuthenticationManager authenticationManager, JwtService jwtService, AuthService authService) {
         this.authenticationManager = authenticationManager;
@@ -31,15 +32,19 @@ public class AuthController {
 
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginRequest.username(),
-                loginRequest.password()
-        ));
+        try {
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    loginRequest.username(),
+                    loginRequest.password())
+            );
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String token = jwtService.generateToken(userDetails.getUsername());
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String      token       = jwtService.generateToken(userDetails.getUsername());
 
-        return new LoginResponse(token);
+            return new LoginResponse(token);
+        } catch (BadCredentialsException exception) {
+            throw new IllegalArgumentException("Nieprawidlowe haslo");
+        }
     }
 
     @PostMapping("/register")
