@@ -37,14 +37,13 @@ public class AuthController {
         ));
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String token = jwtService.generateToken(userDetails);
+        String token = jwtService.generateToken(userDetails.getUsername());
 
         return new LoginResponse(token);
     }
 
     @PostMapping("/register")
     public RegisterRespond register(@RequestBody RegisterRequest request) {
-        IO.println("Register debug");
         return authService.register(request);
     }
 }

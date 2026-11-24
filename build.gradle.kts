@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-	implementation("org.postgresql:postgresql")
+	//implementation("org.postgresql:postgresql")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-webmvc")
@@ -36,6 +36,10 @@ dependencies {
 
 	testCompileOnly("org.projectlombok:lombok:1.18.48")
 	testAnnotationProcessor("org.projectlombok:lombok:1.18.48")
+
+	implementation("org.springframework.boot:spring-boot-h2console")
+	runtimeOnly("com.h2database:h2")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 tasks.withType<Test> {
