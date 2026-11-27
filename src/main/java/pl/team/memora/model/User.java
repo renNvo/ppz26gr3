@@ -7,8 +7,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "users",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = "name"),
-                @UniqueConstraint(columnNames = "email")
+                @UniqueConstraint(columnNames = "name")
         })
 @Getter
 @Setter
@@ -20,9 +19,6 @@ public class User {
 
     @Column(nullable = false, unique = true)
     private String name;
-
-    @Column(nullable = false, unique = true)
-    private String email;
 
     @Column(nullable = false)
     private String password;
