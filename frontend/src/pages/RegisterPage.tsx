@@ -16,7 +16,6 @@ import {
 
 const INITIAL_VALUES: RegisterFormValues = {
   username: "",
-  email: "",
   password: "",
   confirmPassword: "",
 };
@@ -38,18 +37,13 @@ function mapRegisterApiError(error: ApiError): {
     if (error.fieldErrors.username) {
       fieldErrors.username = error.fieldErrors.username;
     }
-    if (error.fieldErrors.email) {
-      fieldErrors.email = error.fieldErrors.email;
-    }
     if (error.fieldErrors.password) {
       fieldErrors.password = error.fieldErrors.password;
     }
   }
 
   const normalizedMessage = error.message.toLowerCase();
-  if (!fieldErrors.email && /(email|e-mail|mail)/.test(normalizedMessage)) {
-    fieldErrors.email = error.message;
-  } else if (
+  if (
     !fieldErrors.username &&
     /(użytkownik|uzytkownik|nazw|username)/.test(normalizedMessage)
   ) {
@@ -106,7 +100,6 @@ export function RegisterPage() {
     try {
       await register({
         username: values.username,
-        email: values.email,
         password: values.password,
       });
       toast.success("Konto zostało utworzone! Witamy w Memora.");
@@ -146,20 +139,6 @@ export function RegisterPage() {
           value={values.username}
           onChange={(e) => updateField("username", e.target.value)}
           error={fieldErrors.username}
-          disabled={isSubmitting}
-          required
-        />
-
-        <FormField
-          id="register-email"
-          name="email"
-          type="email"
-          label="E-mail"
-          placeholder="jan@example.com"
-          autoComplete="email"
-          value={values.email}
-          onChange={(e) => updateField("email", e.target.value)}
-          error={fieldErrors.email}
           disabled={isSubmitting}
           required
         />

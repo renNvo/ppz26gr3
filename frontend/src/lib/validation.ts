@@ -1,6 +1,5 @@
 export interface RegisterFormValues {
   username: string;
-  email: string;
   password: string;
   confirmPassword: string;
 }
@@ -10,24 +9,11 @@ export type RegisterFieldErrors = Partial<
 >;
 
 export interface LoginFormValues {
-  identifier: string;
+  username: string;
   password: string;
 }
 
 export type LoginFieldErrors = Partial<Record<keyof LoginFormValues, string>>;
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-export function validateEmail(email: string): string | null {
-  const trimmed = email.trim();
-  if (!trimmed) {
-    return "Adres e-mail jest wymagany.";
-  }
-  if (!EMAIL_REGEX.test(trimmed)) {
-    return "Podaj poprawny adres e-mail.";
-  }
-  return null;
-}
 
 export function validateRegisterForm(
   values: RegisterFormValues
@@ -39,11 +25,6 @@ export function validateRegisterForm(
     errors.username = "Nazwa użytkownika jest wymagana.";
   } else if (username.length < 3) {
     errors.username = "Nazwa użytkownika musi mieć co najmniej 3 znaki.";
-  }
-
-  const emailError = validateEmail(values.email);
-  if (emailError) {
-    errors.email = emailError;
   }
 
   if (!values.password) {
@@ -64,8 +45,8 @@ export function validateRegisterForm(
 export function validateLoginForm(values: LoginFormValues): LoginFieldErrors {
   const errors: LoginFieldErrors = {};
 
-  if (!values.identifier.trim()) {
-    errors.identifier = "Podaj adres e-mail lub nazwę użytkownika.";
+  if (!values.username.trim()) {
+    errors.username = "Podaj nazwę użytkownika.";
   }
 
   if (!values.password) {

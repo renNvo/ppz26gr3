@@ -26,7 +26,7 @@ interface AuthContextValue {
   user: AuthUser | null;
   token: string | null;
   isAuthenticated: boolean;
-  login: (identifier: string, password: string) => Promise<LoginResponse>;
+  login: (username: string, password: string) => Promise<LoginResponse>;
   register: (payload: RegisterPayload) => Promise<RegisterResponse>;
   logout: () => void;
 }
@@ -84,16 +84,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [auth, setAuth] = useState<AuthState>(loadInitialAuthState);
 
   const login = useCallback(
-    async (identifier: string, password: string): Promise<LoginResponse> => {
-      const normalizedIdentifier = identifier.trim();
+    async (username: string, password: string): Promise<LoginResponse> => {
+      const normalizedUsername = username.trim();
       const response = await authApi.login({
-        username: normalizedIdentifier,
+        username: normalizedUsername,
         password,
       });
 
       const jwtPayload = decodeJwtPayload(response.token);
       const nextUser: AuthUser = {
-        username: jwtPayload?.sub || normalizedIdentifier,
+        username: jwtPayload?.sub || normalizedUsername,
       };
 
       persistAuthState(response.token, nextUser);
@@ -107,7 +107,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (payload: RegisterPayload): Promise<RegisterResponse> => {
       const normalizedPayload: RegisterPayload = {
         username: payload.username.trim(),
-        email: payload.email.trim(),
         password: payload.password,
       };
 
@@ -115,7 +114,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const nextUser: AuthUser = {
         id: response.id,
         username: response.username,
-        email: normalizedPayload.email,
       };
 
       persistAuthState(response.token, nextUser);

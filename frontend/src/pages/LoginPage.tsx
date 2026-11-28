@@ -21,7 +21,7 @@ interface LocationState {
 }
 
 const INITIAL_VALUES: LoginFormValues = {
-  identifier: "",
+  username: "",
   password: "",
 };
 
@@ -64,7 +64,7 @@ export function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      await login(values.identifier, values.password);
+      await login(values.username, values.password);
       toast.success("Zalogowano pomyślnie.");
       navigate(redirectTarget, { replace: true });
     } catch (error) {
@@ -74,8 +74,8 @@ export function LoginPage() {
             "Nie udało się połączyć z serwerem. Sprawdź, czy backend działa na porcie 8080."
           );
         } else {
-          // Generic message per acceptance criteria: never reveal whether login or password is wrong
-          setAuthError("Nieprawidłowy login lub hasło.");
+          // Generic message per acceptance criteria: never reveal whether username or password is wrong
+          setAuthError("Nieprawidłowa nazwa użytkownika lub hasło.");
         }
       } else {
         setAuthError("Wystąpił nieoczekiwany błąd podczas logowania.");
@@ -99,14 +99,14 @@ export function LoginPage() {
         )}
 
         <FormField
-          id="login-identifier"
-          name="identifier"
-          label="E-mail lub nazwa użytkownika"
+          id="login-username"
+          name="username"
+          label="Nazwa użytkownika"
           placeholder="np. jan_kowalski"
           autoComplete="username"
-          value={values.identifier}
-          onChange={(e) => updateField("identifier", e.target.value)}
-          error={fieldErrors.identifier}
+          value={values.username}
+          onChange={(e) => updateField("username", e.target.value)}
+          error={fieldErrors.username}
           disabled={isSubmitting}
           required
         />
